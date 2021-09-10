@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Import data
-file_to_load = 'medical_data_visualizer/medical_examination.csv'
+file_to_load = 'medical_examination.csv'
 df = pd.read_csv(file_to_load)
 
 # Add 'overweight' column
@@ -26,11 +26,14 @@ def draw_cat_plot():
     df_cat = pd.melt(df_norm, id_vars=['cardio'], value_vars=['cholesterol', 'gluc', 'smoke', 'alco', 'active', 'overweight'])
     df_cat['total'] = 1
 
+
     # Group and reformat the data to split it by 'cardio'. Show the counts of each feature. You will have to rename one of the columns for the catplot to work correctly.
     df_cat = df_cat.groupby(['cardio', 'variable', 'value'], as_index=False).count()
 
     # Draw the catplot with 'sns.catplot()'
-    sns.catplot(kind='bar', data=df_cat, x='variable', y='total', hue='value', col='cardio', height=6, aspect=1)
+    g = sns.catplot(kind='bar', data=df_cat, x='variable', y='total', hue='value', col='cardio', height=6, aspect=1)
+
+    fig = g.fig
 
 
     # Do not modify the next two lines
@@ -50,18 +53,19 @@ def draw_heat_map():
 
 
     # Calculate the correlation matrix
-    corr = None
+    corr = df_heat.corr()
 
     # Generate a mask for the upper triangle
-    mask = None
-
+    mask = np.triu(np.ones_like(corr, dtype=bool))
 
 
     # Set up the matplotlib figure
-    fig, ax = None
+    fig, ax = plt.subplots(figsize=(12,12))
+    ax = sns.heatmap(df_heat.corr(), mask=mask, vmax=1, square=True, annot=True, fmt=".1f")
+    
 
     # Draw the heatmap with 'sns.heatmap()'
-
+    
 
 
     # Do not modify the next two lines
